@@ -76,13 +76,13 @@ def main():
     st.sidebar.title("AgriSens")
     # # Input fields for the user to enter the environmental factors
     st.sidebar.header("Enter Crop Details")
-    nitrogen = st.sidebar.number_input("Nitrogen", min_value=0.0, max_value=140.0, value=0.0, step=0.1)
-    phosphorus = st.sidebar.number_input("Phosphorus", min_value=0.0, max_value=145.0, value=0.0, step=0.1)
-    potassium = st.sidebar.number_input("Potassium", min_value=0.0, max_value=205.0, value=0.0, step=0.1)
-    temperature = st.sidebar.number_input("Temperature (°C)", min_value=0.0, max_value=51.0, value=0.0, step=0.1)
-    humidity = st.sidebar.number_input("Humidity (%)", min_value=0.0, max_value=100.0, value=0.0, step=0.1)
-    ph = st.sidebar.number_input("pH Level", min_value=0.0, max_value=14.0, value=0.0, step=0.1)
-    rainfall = st.sidebar.number_input("Rainfall (mm)", min_value=0.0, max_value=500.0, value=0.0, step=0.1)
+    nitrogen = st.sidebar.number_input("Nitrogen", min_value=0.0, max_value=140.0, value=0.0, step=5.0)
+    phosphorus = st.sidebar.number_input("Phosphorus", min_value=0.0, max_value=145.0, value=0.0, step=5.0)
+    potassium = st.sidebar.number_input("Potassium", min_value=0.0, max_value=205.0, value=0.0, step=5.0)
+    temperature = st.sidebar.number_input("Temperature (°C)", min_value=0.0, max_value=51.0, value=0.0, step=2.0)
+    humidity = st.sidebar.number_input("Humidity (%)", min_value=0.0, max_value=100.0, value=0.0, step=5.0)
+    ph = st.sidebar.number_input("pH Level", min_value=0.0, max_value=14.0, value=0.0, step=1.0)
+    rainfall = st.sidebar.number_input("Rainfall (mm)", min_value=150.0, max_value=500.0, value=150.0, step=10.0)
     inputs=[[nitrogen, phosphorus, potassium, temperature, humidity, ph, rainfall]]                                               
    
     # # Validate inputs and make prediction

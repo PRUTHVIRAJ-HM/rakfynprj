@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation - AgriSens</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .crop-container { max-width: 600px; margin: 120px auto 40px; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); padding: 2rem; }
+        .crop-title { font-size: 1.5rem; font-weight: 700; color: #2d5016; margin-bottom: 1rem; }
+        .crop-form-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .crop-form-label { flex: 1; font-weight: 500; color: #333; }
+        .crop-form-input { flex: 2; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #ddd; }
+        .crop-submit-btn { background: #4CAF50; color: #fff; border: none; border-radius: 8px; padding: 0.75rem 1.5rem; font-weight: 600; cursor: pointer; }
+        .crop-submit-btn:hover { background: #45a049; }
+        .crop-result { margin-top: 2rem; font-size: 1.2rem; color: #2d5016; font-weight: 600; text-align: center; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🌾</span>
+                <span class="logo-text">AgriSens</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="dropdown">
+                    <a href="#product" class="dropbtn">Product ▼</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('weather') }}">Weather Forecast</a>
+                        <a href="{{ url_for('disease') }}">Plant Disease Identification</a>
+                        <a href="{{ url_for('crop') }}">Crop Recommendation</a>
+                        <a href="{{ url_for('chatbot') }}">AI Chatbot</a>
+                    </div>
+                </li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <button class="contact-btn">Contact Us →</button>
+        </div>
+    </nav>
+    <div class="crop-container">
+        <div class="crop-title">Smart Crop Recommendation</div>
+        <form method="post" action="{{ url_for('crop') }}">
+            <div class="crop-form-row">
+                <label class="crop-form-label">Nitrogen</label>
+                <input class="crop-form-input" type="number" name="nitrogen" min="0" max="140" step="1" required>
+            </div>
+            <div class="crop-form-row">
+                <label class="crop-form-label">Phosphorus</label>
+                <input class="crop-form-input" type="number" name="phosphorus" min="0" max="145" step="1" required>
+            </div>
+            <div class="crop-form-row">
+                <label class="crop-form-label">Potassium</label>
+                <input class="crop-form-input" type="number" name="potassium" min="0" max="205" step="1" required>
+            </div>
+            <div class="crop-form-row">
+                <label class="crop-form-label">Temperature (°C)</label>
+                <input class="crop-form-input" type="number" name="temperature" min="0" max="51" step="2" required>
+            </div>
+            <div class="crop-form-row">
+                <label class="crop-form-label">Humidity (%)</label>
+                <input class="crop-form-input" type="number" name="humidity" min="0" max="100" step="10" required>
+            </div>
+            <div class="crop-form-row">
+                <label class="crop-form-label">pH Level</label>
+                <input class="crop-form-input" type="number" name="ph" min="0" max="14" step="1" required>
+            </div>
+            <div class="crop-form-row">
+                <label class="crop-form-label">Rainfall (mm)</label>
+                <input class="crop-form-input" type="number" name="rainfall" min="50" max="500" step="10" required>
+            </div>
+            <div style="text-align:center;">
+                <button type="submit" class="crop-submit-btn">Predict</button>
+            </div>
+        </form>
+        {% if result %}
+        <div class="crop-result">
+            The recommended crop is: <strong>{{ result }}</strong>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

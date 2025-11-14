@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSens - Driving the Future of Agriculture</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🌾</span>
+                <span class="logo-text">AgriSens</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="dropdown">
+                    <a href="#product" class="dropbtn">Product ▼</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('weather') }}">Weather Forecast</a>
+                        <a href="{{ url_for('disease') }}">Plant Disease Identification</a>
+                        <a href="{{ url_for('crop') }}">Crop Recommendation</a>
+                        <a href="{{ url_for('chatbot') }}">AI Chatbot</a>
+                    </div>
+                </li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <button class="contact-btn">Contact Us →</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Driving the Future<br>of Agriculture</h1>
+                <p class="hero-subtitle">Modernizing plantation operations with tech-driven solutions<br>for a greener and more productive future</p>
+                <button class="explore-btn">Explore Solutions →</button>
+                
+                <div class="trusted-by">
+                    <p>Trusted by</p>
+                    <p class="company-count">100+ Companies</p>
+                </div>
+            </div>
+            
+            <div class="hero-cards">
+                <!-- Top 5 Field of Farms Card -->
+                <div class="stats-card field-card">
+                    <div class="card-header">
+                        <h3>Top 5 Field of Farms</h3>
+                        <span class="info-icon">ⓘ</span>
+                    </div>
+                    <div class="field-legend">
+                        <span class="legend-item"><span class="dot wheat"></span> Wheat</span>
+                        <span class="legend-item"><span class="dot mustard"></span> Mustard</span>
+                        <span class="legend-item"><span class="dot paddy"></span> Paddy</span>
+                    </div>
+                    <div class="heatmap">
+                        <div class="heatmap-row">
+                            <span class="row-label">Field 1</span>
+                            <div class="cells">
+                                <div class="cell wheat-light"></div>
+                                <div class="cell paddy-medium"></div>
+                                <div class="cell mustard-dark"></div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <span class="row-label">Field 2</span>
+                            <div class="cells">
+                                <div class="cell wheat-medium"></div>
+                                <div class="cell paddy-light"></div>
+                                <div class="cell mustard-medium"></div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <span class="row-label">Field 3</span>
+                            <div class="cells">
+                                <div class="cell wheat-dark"></div>
+                                <div class="cell paddy-dark"></div>
+                                <div class="cell mustard-light"></div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <span class="row-label">Field 4</span>
+                            <div class="cells">
+                                <div class="cell wheat-light"></div>
+                                <div class="cell paddy-medium"></div>
+                                <div class="cell mustard-dark"></div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <span class="row-label">Field 5</span>
+                            <div class="cells">
+                                <div class="cell wheat-medium"></div>
+                                <div class="cell paddy-light"></div>
+                                <div class="cell mustard-medium"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="week-labels">
+                        <span>Week 1</span>
+                        <span>Week 2</span>
+                        <span>Week 3</span>
+                    </div>
+                </div>
+
+                <div class="bottom-cards">
+                    <!-- Growth Chart Card -->
+                    <div class="stats-card chart-card">
+                        <div class="growth-badge">
+                            <span class="percentage">+25%</span>
+                            <span class="label">Production</span>
+                        </div>
+                        <div class="bar-chart">
+                            <div class="bar" style="height: 40%"></div>
+                            <div class="bar" style="height: 50%"></div>
+                            <div class="bar" style="height: 65%"></div>
+                            <div class="bar" style="height: 80%"></div>
+                            <div class="bar" style="height: 95%"></div>
+                        </div>
+                        <div class="chart-labels">
+                            <span>January</span>
+                            <span>February</span>
+                            <span>March</span>
+                            <span>April</span>
+                            <span>May</span>
+                        </div>
+                    </div>
+
+                    <!-- Plant Health Card -->
+                    <div class="stats-card health-card">
+                        <h3>Plant ❤️</h3>
+                        <div class="health-donut">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="#e0e0e0" stroke-width="12"/>
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="#4CAF50" stroke-width="12"
+                                    stroke-dasharray="251.2" stroke-dashoffset="62.8" 
+                                    transform="rotate(-90 50 50)"/>
+                            </svg>
+                            <div class="health-value">
+                                <span class="value">1500</span>
+                                <span class="unit">KG</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partner Logos -->
+        <div class="partners">
+            <div class="partner-logo">Ghost</div>
+            <div class="partner-logo">Basecamp</div>
+            <div class="partner-logo">autopilot</div>
+            <div class="partner-logo">Himalayas</div>
+            <div class="partner-logo">treehouse</div>
+            <div class="partner-logo">closepass</div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="benefits-container">
+            <p class="section-label">BENEFIT OF AGRIFUTURE</p>
+            <h2 class="section-title">What Agrifuture Solutions<br>Are You Seeking?</h2>
+            
+            <div class="benefits-grid">
+                <!-- Smart Farming Technology -->
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <rect x="8" y="20" width="32" height="16" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <polyline points="14,28 20,22 26,26 32,20" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="22" r="2" fill="currentColor"/>
+                            <circle cx="26" cy="26" r="2" fill="currentColor"/>
+                            <circle cx="32" cy="20" r="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Smart Farming Technology</h3>
+                    <p>IoT-enabled devices monitor crops and soil, while real-time analytics support better decision-making</p>
+                </div>
+
+                <!-- Market Access and Insights -->
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path d="M24 8 L24 24 L32 32" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="24" cy="24" r="3" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Market Access and Insights</h3>
+                    <p>Connect farmers to buyers through our marketplace and gain insights into crop demand and pricing trends</p>
+                </div>
+
+                <!-- Education and Training -->
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <rect x="10" y="18" width="28" height="20" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <rect x="14" y="22" width="8" height="6" fill="currentColor"/>
+                            <rect x="26" y="22" width="8" height="6" fill="currentColor"/>
+                            <path d="M18 32 L18 34" stroke="currentColor" stroke-width="2"/>
+                            <path d="M30 32 L30 34" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Education and Training</h3>
+                    <p>Resources and workshops to help farmers adopt modern farming methods and embrace sustainability and solutions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Dropdown toggle on click
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.dropdown');
+            const dropbtn = dropdown.querySelector('.dropbtn');
+            
+            dropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
