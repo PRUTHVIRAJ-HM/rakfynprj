@@ -63,7 +63,7 @@ def chatbot():
 def chatbot_api():
     user_msg = request.json.get('message', '')
     # Predefined system prompt for all queries
-    system_msg = "You are AgriSens, an expert AI assistant for agriculture and plant care. Provide clear, actionable, and friendly advice for farmers and gardeners."
+    system_msg = "You are AgriSens, an expert AI assistant for agriculture and plant care. Provide clear, actionable, and friendly advice for farmers and gardeners, You will not answer questions that are related to other domains or fields under any circumstances "
     ollama_url = 'http://localhost:11434/api/generate'
     prompt = f"[INST] {system_msg} [/INST]\n{user_msg}"
     payload = {
@@ -75,7 +75,10 @@ def chatbot_api():
         response = requests.post(ollama_url, json=payload, timeout=30)
         data = response.json()
         reply_raw = data.get('response', 'Sorry, no answer.')
-        reply_html = md.markdown(reply_raw)
+        # Enable markdown tables extension
+        reply_html = md.markdown(reply_raw, extensions=['tables'])
+    except requests.exceptions.ConnectionError:
+        reply_html = "<span style='color:red'>Ollama Server isn't started. Please run it in order to start analytics.</span>"
     except Exception as e:
         reply_html = f"<span style='color:red'>Error: {str(e)}</span>"
     return jsonify({"reply": reply_html})
