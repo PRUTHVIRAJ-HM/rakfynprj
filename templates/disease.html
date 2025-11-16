@@ -1,2 +1,628 @@
-<!-- Plant Disease Identification Page HTML will be placed here. -->
-<!-- Add your Plant Disease Identification UI here. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Recognition - AgriSens</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .disease-page {
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            padding: 6rem 0 4rem;
+        }
+        .disease-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .disease-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .disease-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        .disease-badge svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--accent-green);
+        }
+        .disease-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        .disease-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .disease-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .upload-section {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .upload-area:hover {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.05);
+        }
+        .upload-area.dragover {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.1);
+            transform: scale(1.02);
+        }
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            color: var(--accent-green);
+            stroke-width: 1.5;
+        }
+        .upload-text h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .upload-text p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        #imageInput {
+            display: none;
+        }
+        .image-preview-section {
+            margin-top: 1.5rem;
+            display: none;
+        }
+        .image-preview-section.active {
+            display: block;
+        }
+        .preview-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+        .analyze-btn {
+            width: 100%;
+            margin-top: 1rem;
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .analyze-btn:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .analyze-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .result-section {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
+        .result-placeholder {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+        .result-placeholder svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            stroke-width: 1.5;
+        }
+        .result-placeholder h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .result-content {
+            display: none;
+        }
+        .result-content.active {
+            display: block;
+        }
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .result-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+        .result-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+        .result-info h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        .result-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .result-details {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .disease-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .confidence-bar {
+            margin-bottom: 1rem;
+        }
+        .confidence-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .confidence-track {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), #059669);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+        .info-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .info-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+        .info-card h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .info-card p {
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+        
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .loading-box {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            padding: 3rem 4rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+        }
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+        .loading-spinner svg {
+            width: 100%;
+            height: 100%;
+            animation: rotate 2s linear infinite;
+        }
+        .loading-spinner circle {
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 0;
+            animation: dash 1.5s ease-in-out infinite;
+        }
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes dash {
+            0% {
+                stroke-dasharray: 1, 200;
+                stroke-dashoffset: 0;
+            }
+            50% {
+                stroke-dasharray: 89, 200;
+                stroke-dashoffset: -35px;
+            }
+            100% {
+                stroke-dasharray: 89, 200;
+                stroke-dashoffset: -124px;
+            }
+        }
+        .loading-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .loading-subtext {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        .loading-dots {
+            display: inline-block;
+        }
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        @media (max-width: 968px) {
+            .disease-content {
+                grid-template-columns: 1fr;
+            }
+            .disease-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i data-lucide="wheat" style="width:36px;height:36px;vertical-align:middle;"></i>
+                <span class="logo-text">AgriSens</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('landing') }}">Home</a></li>
+          
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">
+                        Features
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('weather') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+                            </svg>
+                            Weather Forecast
+                        </a>
+                        <a href="{{ url_for('disease') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                            Plant Disease Identification
+                        </a>
+                        <a href="{{ url_for('crop') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5"/>
+                                <path d="M12 7.5V9"/>
+                                <path d="M7.5 12H9"/>
+                                <path d="M16.5 12H15"/>
+                                <path d="M12 16.5V15"/>
+                                <path d="m8 8 1.88 1.88"/>
+                                <path d="M14.12 9.88 16 8"/>
+                                <path d="m8 16 1.88-1.88"/>
+                                <path d="m14.12 14.12 1.88 1.88"/>
+                            </svg>
+                            Crop Recommendation
+                        </a>
+                        <a href="{{ url_for('chatbot') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            AI Chatbot
+                        </a>
+                    </div>
+                </li>
+             
+                <li><a href="{{ url_for('about') }}">About</a></li>
+            </ul>
+            <button class="contact-btn">
+                Get Started
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-box">
+            <div class="loading-spinner">
+                <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45"/>
+                </svg>
+            </div>
+            <div class="loading-text">Analyzing<span class="loading-dots"></span></div>
+            <div class="loading-subtext">Processing your plant image</div>
+        </div>
+    </div>
+
+    <div class="disease-page">
+        <div class="disease-container">
+            <div class="disease-header">
+                <div class="disease-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    AI-Powered Detection
+                </div>
+                <h1 class="disease-title">Plant Disease Recognition</h1>
+                <p class="disease-subtitle">Upload a plant leaf image for instant disease identification and expert recommendations</p>
+            </div>
+
+            <div class="disease-content">
+                <div class="upload-section">
+                    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <div class="upload-area" onclick="document.getElementById('imageInput').click()" id="uploadArea">
+                            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <div class="upload-text">
+                                <h3>Click to upload or drag and drop</h3>
+                                <p>PNG, JPG, JPEG up to 10MB</p>
+                            </div>
+                            <input type="file" name="image" id="imageInput" accept="image/*" onchange="previewImage(event)" required>
+                        </div>
+
+                        <div class="image-preview-section" id="imagePreview">
+                            <img id="preview" class="preview-image" alt="Preview">
+                            <button type="submit" class="analyze-btn" id="analyzeBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 11 12 14 22 4"/>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                </svg>
+                                Analyze Disease
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="result-section">
+                    {% if not prediction %}
+                    <div class="result-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        <h3>Waiting for Analysis</h3>
+                        <p>Upload a plant leaf image to get started with disease detection</p>
+                    </div>
+                    {% endif %}
+
+                    {% if prediction %}
+                    <div class="result-content active">
+                        <div class="result-header">
+                            <div class="result-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <div class="result-info">
+                                <h2>Analysis Complete</h2>
+                                <p>Disease identified successfully</p>
+                            </div>
+                        </div>
+
+                        <div class="result-details">
+                            <div class="disease-name">{{ prediction }}</div>
+                            
+                            {% if confidence %}
+                            <div class="confidence-bar">
+                                <div class="confidence-label">
+                                    <span>Confidence Level</span>
+                                    <span style="font-weight: 600; color: var(--accent-green);">{{ "%.1f"|format(confidence) }}%</span>
+                                </div>
+                                <div class="confidence-track">
+                                    <div class="confidence-fill" {% if confidence is not none %}style="width: {{ confidence }}%"{% endif %}></div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="info-cards">
+                            <div class="info-card">
+                                <h4>Recommendation</h4>
+                                <p>{{ recommendation if recommendation else 'Continue regular plant care and monitoring for optimal growth.' }}</p>
+                            </div>
+                            <div class="info-card">
+                                <h4>Next Steps</h4>
+                                <p>{{ next_steps if next_steps else 'Monitor the affected area closely and consult with agricultural experts.' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.dropdown');
+            const dropbtn = dropdown.querySelector('.dropbtn');
+            const uploadForm = document.getElementById('uploadForm');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            dropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // Show loading animation on form submit
+            uploadForm.addEventListener('submit', function(e) {
+                const fileInput = document.getElementById('imageInput');
+                if (fileInput.files.length > 0) {
+                    loadingOverlay.classList.add('active');
+                }
+            });
+
+            // Drag and drop
+            const uploadArea = document.getElementById('uploadArea');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.classList.add('dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.classList.remove('dragover');
+                }, false);
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                document.getElementById('imageInput').files = files;
+                if (files.length > 0) {
+                    previewImage({ target: { files: files } });
+                }
+            }, false);
+        });
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('imagePreview').classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+        <script>
+            lucide.createIcons();
+        </script>
+</html>
