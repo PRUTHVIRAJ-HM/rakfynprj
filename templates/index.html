@@ -40,7 +40,7 @@
                                 <path d="M12 16v-4"/>
                                 <path d="M12 8h.01"/>
                             </svg>
-                            Plant Disease Identification
+                            Plant Disease Detection
                         </a>
                         <a href="{{ url_for('crop') }}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -90,19 +90,25 @@
                 <h1 class="hero-title">AI-Powered Agriculture for Modern Farmers</h1>
                 <p class="hero-subtitle">AgriSens empowers farmers and agri-businesses with real-time crop recommendations, weather forecasting, and plant disease detection. Make data-driven decisions, boost yields, and ensure sustainable farming with our all-in-one platform.</p>
                 <div class="hero-buttons">
+                    <a href="{{ url_for('crop') }}">
                     <button class="btn-primary">
-                        Try AgriSens Now
+                        Crop Recommendation
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
                     </button>
-                    <button class="btn-secondary">
+                    </a>
+                    <a href="{{ url_for('disease') }}">
+                    <button class="btn-primary">
+                        Plant Disease Detection
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="5 3 19 12 5 21 5 3"/>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
-                        Watch AgriSens Demo
                     </button>
+                    </a>
+                    
                 </div>
                 <div class="hero-stats">
                     <div class="stat-item">
