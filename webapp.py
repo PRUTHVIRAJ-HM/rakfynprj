@@ -1,14 +1,27 @@
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, flash, redirect, url_for
+from functools import wraps
 import requests
 import markdown as md
-
-
 import numpy as np
 import pickle
 import os
+import json
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = 'agrisens-secret-key-change-in-production'  # Change this in production!
+
+def login_required(f):
+    """Decorator to require login for routes"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_email' not in session:
+            flash('Please login to access this page', 'error')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Load the trained RandomForest model (RF.pkl)
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'CROP-RECOMMENDATION', 'RF.pkl')
@@ -19,25 +32,135 @@ except Exception as e:
     crop_model = None
     print(f"Error loading crop model: {e}")
 
+# User data storage
+USERS_FILE = os.path.join(os.path.dirname(__file__), 'users.json')
+
+def load_users():
+    """Load users from JSON file"""
+    if os.path.exists(USERS_FILE):
+        try:
+            with open(USERS_FILE, 'r') as f:
+                return json.load(f)
+        except:
+            return {}
+    return {}
+
+def save_users(users):
+    """Save users to JSON file"""
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f, indent=2)
+
+def register_user(email, password, name):
+    """Register a new user"""
+    users = load_users()
+    if email in users:
+        return False, "Email already registered"
+    
+    users[email] = {
+        'password_hash': generate_password_hash(password),
+        'name': name.strip(),
+        'created_at': datetime.now().isoformat()
+    }
+    save_users(users)
+    return True, "Account created successfully"
+
+def get_user_name(email):
+    """Get user's name from email"""
+    users = load_users()
+    if email in users:
+        return users[email].get('name', email)
+    return email
+
+def verify_user(email, password):
+    """Verify user credentials"""
+    users = load_users()
+    if email not in users:
+        return False
+    
+    return check_password_hash(users[email]['password_hash'], password)
+
 @app.route('/')
+@login_required
 def landing():
     return render_template('index.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # If already logged in, redirect to landing
+    if 'user_email' in session:
+        return redirect(url_for('landing'))
+    
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+        
+        if not email or not password:
+            flash('Please fill in all fields', 'error')
+            return render_template('login.html')
+        
+        if verify_user(email, password):
+            session['user_email'] = email
+            session['user_name'] = get_user_name(email)
+            flash('Login successful!', 'success')
+            return redirect(url_for('landing'))
+        else:
+            flash('Invalid email or password', 'error')
+    
+    return render_template('login.html')
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    email = request.form.get('email', '').strip().lower()
+    password = request.form.get('password', '')
+    confirm_password = request.form.get('confirm_password', '')
+    name = request.form.get('name', '').strip()
+    
+    if not email or not password or not confirm_password or not name:
+        flash('Please fill in all fields', 'error')
+        return redirect(url_for('login'))
+    
+    if password != confirm_password:
+        flash('Passwords do not match', 'error')
+        return redirect(url_for('login'))
+    
+    if len(password) < 6:
+        flash('Password must be at least 6 characters long', 'error')
+        return redirect(url_for('login'))
+    
+    success, message = register_user(email, password, name)
+    if success:
+        flash(message, 'success')
+        session['user_email'] = email
+        session['user_name'] = name
+        return redirect(url_for('landing'))
+    else:
+        flash(message, 'error')
+        return redirect(url_for('login'))
+
+@app.route('/logout')
+def logout():
+    session.pop('user_email', None)
+    session.pop('user_name', None)
+    flash('Logged out successfully', 'success')
+    return redirect(url_for('login'))
+
 @app.route('/about')
+@login_required
 def about():
     return render_template('about.html')
 
 @app.route('/weather')
+@login_required
 def weather():
     return render_template('weather.html')
 
 @app.route('/disease', methods=['GET', 'POST'])
+@login_required
 def disease():
     prediction = None
     uploaded_image = None
     confidence = None
     recommendation = None
-    next_steps = None
     
     if request.method == 'POST':
         if 'image' in request.files:
@@ -99,33 +222,21 @@ def disease():
                         rec_data = rec_response.json()
                         recommendation = rec_data.get('response', 'Continue regular plant care and monitoring.')
                         
-                        # Generate next steps
-                        steps_prompt = f"You are an expert agricultural advisor. A plant has been identified with: {prediction}. Provide specific next steps (2-3 sentences) for the farmer to take immediately. Focus on practical actions."
-                        steps_payload = {
-                            "model": "llama3.2:3b",
-                            "prompt": steps_prompt,
-                            "stream": False
-                        }
-                        steps_response = requests.post(ollama_url, json=steps_payload, timeout=30)
-                        steps_data = steps_response.json()
-                        next_steps = steps_data.get('response', 'Monitor the plant closely and document any changes.')
-                        
                     except requests.exceptions.ConnectionError:
                         recommendation = "Ollama Server is not running. Using default recommendations."
-                        next_steps = "Start Ollama Server to get AI-powered next steps."
                     except Exception as e:
                         recommendation = "Continue regular plant care and monitoring."
-                        next_steps = "Monitor the plant closely and consult with local agricultural experts."
                         
                 except Exception as e:
                     prediction = f"Error: {str(e)}"
     
     return render_template('disease.html', prediction=prediction, uploaded_image=uploaded_image, 
-                         confidence=confidence, recommendation=recommendation, next_steps=next_steps)
+                         confidence=confidence, recommendation=recommendation)
 
 
 # Crop recommendation route
 @app.route('/crop', methods=['GET', 'POST'])
+@login_required
 def crop():
     result = None
     error = None
@@ -149,10 +260,12 @@ def crop():
     return render_template('crop.html', result=result, error=error)
 
 @app.route('/chatbot')
+@login_required
 def chatbot():
     return render_template('chatbot.html')
 
 @app.route('/chatbot_api', methods=['POST'])
+@login_required
 def chatbot_api():
     user_msg = request.json.get('message', '')
     # Predefined system prompt for all queries

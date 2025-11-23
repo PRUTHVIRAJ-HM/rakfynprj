@@ -71,6 +71,12 @@ body {
     cursor: pointer;
 }
 
+.logo img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
 .logo svg {
     width: 28px;
     height: 28px;
@@ -328,6 +334,16 @@ body {
     padding: 1.5rem;
     box-shadow: var(--shadow-xl);
     border: 1px solid var(--border);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.dashboard-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    object-fit: cover;
 }
 
 .card-header-row {

@@ -279,7 +279,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <i data-lucide="wheat" style="width:36px;height:36px;vertical-align:middle;"></i>
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="brand_image">
                 <span class="logo-text">AgriSens</span>
             </div>
             <ul class="nav-menu">
@@ -332,13 +332,20 @@
                 </li>
                 <li><a href="{{ url_for('about') }}">About</a></li>
             </ul>
-            <button class="contact-btn">
-                Get Started
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </button>
+            {% if session.get('user_email') %}
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: var(--text-secondary); font-size: 0.9375rem;">{{ session.user_name or session.user_email }}</span>
+                <a href="{{ url_for('logout') }}" style="text-decoration: none;">
+                    <button class="contact-btn" style="padding: 0.5rem 1.25rem; font-size: 0.875rem;">
+                        Logout
+                    </button>
+                </a>
+            </div>
+            {% else %}
+            <a href="{{ url_for('login') }}" style="text-decoration: none;">
+                <button class="contact-btn">Login</button>
+            </a>
+            {% endif %}
         </div>
     </nav>
 

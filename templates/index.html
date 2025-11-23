@@ -15,7 +15,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <i data-lucide="wheat" style="width:40px;height:40px;vertical-align:middle;"></i>
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="brand_image">
                 <span class="logo-text">AgriSens</span>
             </div>
             <ul class="nav-menu">
@@ -67,13 +67,20 @@
                 </li>
                 <li><a href="{{ url_for('about') }}">About</a></li>
             </ul>
-            <button class="contact-btn">
-                Get Started
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </button>
+            {% if session.get('user_email') %}
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: var(--text-secondary); font-size: 0.9375rem;">{{ session.user_name or session.user_email }}</span>
+                <a href="{{ url_for('logout') }}" style="text-decoration: none;">
+                    <button class="contact-btn" style="padding: 0.5rem 1.25rem; font-size: 0.875rem;">
+                        Logout
+                    </button>
+                </a>
+            </div>
+            {% else %}
+            <a href="{{ url_for('login') }}" style="text-decoration: none;">
+                <button class="contact-btn">Login</button>
+            </a>
+            {% endif %}
         </div>
     </nav>
 
@@ -138,57 +145,7 @@
             
             <div class="hero-visual">
                 <div class="dashboard-card">
-                    <div class="card-header-row">
-                        <div class="card-tabs">
-                            <button class="tab active">Categories</button>
-                            <button class="tab">All members</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="category-list">
-                            <div class="category-item">
-                                <div class="category-info">
-                                    <div class="category-icon yellow">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                            <path d="M2 17l10 5 10-5"/>
-                                            <path d="M2 12l10 5 10-5"/>
-                                        </svg>
-                                    </div>
-                                    <span>Crop Health</span>
-                                </div>
-                                <span class="category-count">12</span>
-                            </div>
-                            <div class="category-item">
-                                <div class="category-info">
-                                    <div class="category-icon green">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                            <polyline points="22 4 12 14.01 9 11.01"/>
-                                        </svg>
-                                    </div>
-                                    <span>Weather</span>
-                                </div>
-                                <span class="category-count">8</span>
-                            </div>
-                            <div class="category-item">
-                                <div class="category-info">
-                                    <div class="category-icon purple">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="10"/>
-                                            <circle cx="12" cy="12" r="6"/>
-                                        </svg>
-                                    </div>
-                                    <span>Disease Detection</span>
-                                </div>
-                                <span class="category-count">15</span>
-                            </div>
-                        </div>
-                        <div class="chart-preview">
-                            <img src="data:image/svg+xml,%3Csvg width='280' height='140' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='280' height='140' fill='%23f8f9fa'/%3E%3Cpath d='M20,100 L60,80 L100,90 L140,60 L180,70 L220,40 L260,50' stroke='%23fbbf24' stroke-width='3' fill='none'/%3E%3Cpath d='M20,110 L60,100 L100,105 L140,85 L180,95 L220,75 L260,80' stroke='%2310b981' stroke-width='3' fill='none'/%3E%3C/svg%3E" alt="Chart">
-                        </div>
-                    </div>
-                </div>
+                    <img src="{{ url_for('static', filename='img/farmer.png') }}" alt="image_of_farmer">
             </div>
         </div>
     </section>
@@ -249,37 +206,24 @@
             <div class="benefits-grid">
                 <div class="benefit-card">
                     <div class="benefit-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                            <line x1="12" y1="22.08" x2="12" y2="12"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket-icon lucide-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
                     </div>
-                    <h3>Easy Setup for Farmers</h3>
-                    <p>Get started in minutes with a user-friendly interface designed for all experience levels.</p>
+                    <h3>Instant AI-Powered Onboarding</h3>
+                    <p>Start in minutes: upload, ask, and receive smart crop, disease and nutrient guidance without complex setup.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="3"/>
-                            <path d="M12 1v6m0 6v6"/>
-                            <path d="m4.93 4.93 4.24 4.24m5.66 5.66 4.24 4.24"/>
-                            <path d="M1 12h6m6 0h6"/>
-                            <path d="m4.93 19.07 4.24-4.24m5.66-5.66 4.24-4.24"/>
-                        </svg>
+                       <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-more-icon lucide-message-square-more"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 11h.01"/><path d="M16 11h.01"/><path d="M8 11h.01"/></svg>
                     </div>
-                    <h3>Collaboration & Support</h3>
-                    <p>Connect with agronomists and experts, and get instant support for your farming queries.</p>
+                    <h3>AI Chat & Expert Support</h3>
+                    <p>Get 24/7 conversational assistance plus agronomist-backed insights for decisions on crops, soil and inputs.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"/>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-sun-icon lucide-cloud-sun"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></svg>
                     </div>
-                    <h3>Track Field Growth</h3>
-                    <p>Monitor your crops and fields with detailed analytics and actionable insights for every season.</p>
+                    <h3>Real-Time Weather & Growth</h3>
+                    <p>Live forecasts, microclimate alerts and season analytics help optimize irrigation, protection and yield planning.</p>
                 </div>
             </div>
         </div>
