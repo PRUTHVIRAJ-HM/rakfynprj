@@ -700,6 +700,90 @@ body {
     }
 }
 
+/* Footer */
+.footer {
+    background: var(--primary);
+    color: #e2e8f0;
+    padding: 3rem 0 1.5rem;
+    margin-top: 4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-column h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: #ffffff;
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-column ul li a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    transition: color 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+    color: var(--accent-yellow);
+}
+
+.features-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.footer-logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.footer-description {
+    font-size: 0.9375rem;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .hero-container {
@@ -721,6 +805,11 @@ body {
     
     .benefits-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .footer-content {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
     }
 }
 
@@ -752,5 +841,22 @@ body {
     .btn-primary, .btn-secondary {
         width: 100%;
         justify-content: center;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .newsletter-form {
+        flex-direction: row;
+    }
+    
+    .newsletter-form input {
+        flex: 1;
+    }
+    
+    .newsletter-form button {
+        flex-shrink: 0;
     }
 }

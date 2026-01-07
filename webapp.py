@@ -179,7 +179,7 @@ def disease():
                     file.save(filepath)
                     
                     # Load model and predict
-                    model_path = os.path.join('PLANT-DISEASE-IDENTIFICATION', 'trained_plant_disease_model.keras')
+                    model_path = os.path.join(os.path.dirname(__file__), 'PLANT-DISEASE-IDENTIFICATION', 'trained_plant_disease_model.keras')
                     model = tf.keras.models.load_model(model_path)
                     
                     image = tf.keras.preprocessing.image.load_img(filepath, target_size=(128, 128))
@@ -212,7 +212,14 @@ def disease():
                         ollama_url = 'http://localhost:11434/api/generate'
                         
                         # Generate recommendation
-                        rec_prompt = f"You are an expert agricultural advisor. A plant has been identified with: {prediction}. Provide a brief, actionable recommendation (2-3 sentences) for treating this condition. Be specific and practical."
+                        rec_prompt = f"""You are an expert agricultural advisor. A plant has been identified with: {prediction}. 
+
+Provide a structured treatment recommendation in markdown format with:
+- A brief introduction
+- 3-4 numbered action steps with **bold** headings
+- Specific, practical advice for each step
+
+Format your response using proper markdown with numbered lists and bold text."""
                         rec_payload = {
                             "model": "llama3.2:3b",
                             "prompt": rec_prompt,
@@ -220,12 +227,14 @@ def disease():
                         }
                         rec_response = requests.post(ollama_url, json=rec_payload, timeout=30)
                         rec_data = rec_response.json()
-                        recommendation = rec_data.get('response', 'Continue regular plant care and monitoring.')
+                        recommendation_raw = rec_data.get('response', 'Continue regular plant care and monitoring.')
+                        # Convert markdown to HTML
+                        recommendation = md.markdown(recommendation_raw, extensions=['nl2br'])
                         
                     except requests.exceptions.ConnectionError:
-                        recommendation = "Ollama Server is not running. Using default recommendations."
+                        recommendation = "<p>Ollama Server is not running. Using default recommendations.</p>"
                     except Exception as e:
-                        recommendation = "Continue regular plant care and monitoring."
+                        recommendation = "<p>Continue regular plant care and monitoring.</p>"
                         
                 except Exception as e:
                     prediction = f"Error: {str(e)}"
@@ -268,13 +277,28 @@ def chatbot():
 @login_required
 def chatbot_api():
     user_msg = request.json.get('message', '')
+    conversation_history = request.json.get('conversation_history', [])
+    
     # Predefined system prompt for all queries
     system_msg = "You are AgriSens, an expert AI assistant for agriculture and plant care. Provide clear, actionable, and friendly advice for farmers and gardeners, You will not answer questions that are related to other domains or fields under any circumstances "
+    
+    # Build conversation context from history
+    context = ""
+    if conversation_history:
+        for msg in conversation_history:
+            role = "User" if msg['role'] == 'user' else "AgriSens"
+            context += f"{role}: {msg['content']}\n"
+    
+    # Construct the full prompt with context
+    full_prompt = f"[INST] {system_msg} [/INST]\n"
+    if context:
+        full_prompt += f"Conversation history:\n{context}\n"
+    full_prompt += f"User: {user_msg}\nAgriSens:"
+    
     ollama_url = 'http://localhost:11434/api/generate'
-    prompt = f"[INST] {system_msg} [/INST]\n{user_msg}"
     payload = {
         "model": "llama3.2:3b",
-        "prompt": prompt,
+        "prompt": full_prompt,
         "stream": False
     }
     try:
