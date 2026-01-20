@@ -13,5 +13,10 @@
     "password_hash": "scrypt:32768:8:1$Zb8O8xzA4iWM7Y9k$bc0f609749ecf1fde20264e51530f1c8fffa9aea03a5a9d70a1810fa6165f762bd41e6f7395633e22c4d0f3318c833cbc6d6bbe7c5882161be6770cbc988786e",
     "name": "Pruthvi Raj HM",
     "created_at": "2025-12-16T13:55:40.127972"
+  },
+  "anushlakshiminarayan@gmail.com": {
+    "password_hash": "scrypt:32768:8:1$mwz8brDL68t7hVCr$e9ff5aeda7503e7bf4fe21e42bbbea03bc8b8fae3f25e28c5b8dd2dedaa06b6f7a4d7ac7f04c254b8805acde8ed5157c915bcb4c29405faf9c6d1a04cf2b586d",
+    "name": "abc",
+    "created_at": "2026-01-08T11:39:06.174354"
   }
 }
